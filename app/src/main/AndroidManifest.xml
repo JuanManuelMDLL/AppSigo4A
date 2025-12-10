@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSigo4A">
         <activity android:name=".screens.HomeActivity" />
+        <activity android:name=".screens.PerfilActivity" />
+        <activity android:name=".screens.HistorialActivity" />
 
         <activity
             android:name=".MainActivity"

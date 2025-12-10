@@ -1,41 +1,29 @@
 package com.example.appsigo4a.screens
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.appsigo4a.ui.theme.AppSigo4ATheme
 
 class HomeActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             AppSigo4ATheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(24.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Bienvenido a SIGO",
-                            style = MaterialTheme.typography.headlineMedium
-                        )
+
+                HomeScreen(
+                    onPerfilClick = {
+                        val intent = Intent(this, PerfilActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onHistorialClick = {
+                        val intent = Intent(this, HistorialActivity::class.java)
+                        startActivity(intent)
                     }
-                }
+                )
+
             }
         }
     }
 }
-
