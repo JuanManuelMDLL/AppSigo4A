@@ -1,9 +1,8 @@
 package com.example.appsigo4a.screens
 
-import android.app.Activity
-import android.content.Intent
-import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -11,37 +10,56 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.appsigo4a.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(activity: Activity) {
-
-    val context = LocalContext.current
+fun LoginScreen(onLoginSuccess: () -> Unit) {
 
     var usuario by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var error by remember { mutableStateOf("") }
+
+    val usuarioCorrecto = "UTM2025"
+    val passwordCorrecto = "12345"
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
+            .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = "SIGO UTM",
-            style = MaterialTheme.typography.headlineLarge
-        )
+        Spacer(modifier = Modifier.height(50.dp))
 
-        Spacer(modifier = Modifier.height(32.dp))
+        // ✅ LOGOS SIGO + UTM
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_sigo),
+                contentDescription = "Logo SIGO",
+                modifier = Modifier.size(90.dp)
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.logo_utm),
+                contentDescription = "Logo UTM",
+                modifier = Modifier.size(90.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(50.dp))
 
         OutlinedTextField(
             value = usuario,
             onValueChange = { usuario = it },
-            label = { Text("Usuario") },
+            placeholder = { Text("Usuario") },
             leadingIcon = {
                 Icon(Icons.Default.Person, contentDescription = null)
             },
@@ -53,57 +71,51 @@ fun LoginScreen(activity: Activity) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña") },
+            placeholder = { Text("Contraseña") },
             leadingIcon = {
                 Icon(Icons.Default.Lock, contentDescription = null)
             },
             visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        if (error.isNotEmpty()) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
         Button(
             onClick = {
-
-                // USUARIO DE PRUEBA
-                if (usuario == "utm2025" && password == "1234") {
-
-                    Toast.makeText(
-                        context,
-                        "Login exitoso",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    val intent = Intent(context, HomeActivity::class.java)
-                    context.startActivity(intent)
-                    activity.finish()
-
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Usuario o contraseña incorrectos",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                when {
+                    usuario.isBlank() || password.isBlank() -> {
+                        error = "Todos los campos son obligatorios"
+                    }
+                    usuario == usuarioCorrecto && password == passwordCorrecto -> {
+                        error = ""
+                        onLoginSuccess()
+                    }
+                    else -> {
+                        error = "Usuario o contraseña incorrectos"
+                    }
                 }
-
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
         ) {
-            Text("Iniciar Sesión")
+            Text("INICIAR SESIÓN")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = {
-            Toast.makeText(
-                context,
-                "Recuperación no implementada",
-                Toast.LENGTH_SHORT
-            ).show()
-        }) {
+        TextButton(onClick = { }) {
             Text("¿Olvidaste tu contraseña?")
         }
     }
 }
-
