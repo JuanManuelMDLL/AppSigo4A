@@ -17,23 +17,30 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.foundation.border
-
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.School
+import androidx.compose.ui.platform.LocalContext
+import com.example.appsigo4a.data.local.TokenManager
 
 @Composable
 fun HomeScreen(
     onPerfilClick: () -> Unit,
     onHistorialClick: () -> Unit,
-    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
+    onLogoutClick: () -> Unit
 ) {
+
+    // ⭐ CARGAR DATOS REALES DEL USUARIO
+    val tokenManager = TokenManager(LocalContext.current)
+    val fullName = tokenManager.getFullName() ?: "Usuario"
+    val username = tokenManager.getUsername() ?: ""
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
 
-        // Rectángulo superior con íconos a la izquierda y foto de perfil a la derecha
+        // Rectángulo superior (NO MODIFICADO)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +65,15 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Botón para cerrar sesión
+        // ⭐ Mostrar nombre del usuario debajo del rectángulo
+        Text(
+            text = "Bienvenido, $fullName",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botón cerrar sesión (NO MODIFICADO)
         OutlinedButton(
             onClick = { onLogoutClick() },
             modifier = Modifier.align(Alignment.End)
@@ -68,9 +83,7 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Resto de la pantalla (contenido actual)
-
-        // TARJETA MI PERFIL
+        // TARJETA MI PERFIL (NO CAMBIADA)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -90,21 +103,16 @@ fun HomeScreen(
                 Icon(Icons.Filled.Person, contentDescription = "Perfil")
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(
-                        text = "Mi perfil",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = "Valida tu información personal y mantenla actualizada.",
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    Text("Mi perfil", style = MaterialTheme.typography.titleMedium)
+                    Text("Valida tu información personal y mantenla actualizada.",
+                        style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TARJETA HISTORIAL
+        // TARJETA HISTORIAL (NO CAMBIADA)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -124,16 +132,12 @@ fun HomeScreen(
                 Icon(Icons.Filled.Folder, contentDescription = "Historial")
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(
-                        text = "Mi historial académico",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = "Consulta tu historial y estate al pendiente de tu estatus académico.",
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                    Text("Mi historial académico", style = MaterialTheme.typography.titleMedium)
+                    Text("Consulta tu historial y estate al pendiente de tu estatus académico.",
+                        style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
     }
 }
+
