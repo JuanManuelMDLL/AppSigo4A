@@ -17,8 +17,7 @@ class LoginViewModel(
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
-            val result = repository.login(username, password)
-            _loginState.value = result
+            _loginState.value = repository.login(username, password)
         }
     }
 }

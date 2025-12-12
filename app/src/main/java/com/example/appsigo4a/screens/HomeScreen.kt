@@ -28,11 +28,12 @@ fun HomeScreen(
     onHistorialClick: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val tokenManager = remember { TokenManager(context) }
 
-    // ⭐ CARGAR DATOS REALES DEL USUARIO
-    val tokenManager = TokenManager(LocalContext.current)
     val fullName = tokenManager.getFullName() ?: "Usuario"
     val username = tokenManager.getUsername() ?: ""
+
 
     Column(
         modifier = Modifier
@@ -40,7 +41,6 @@ fun HomeScreen(
             .padding(16.dp)
     ) {
 
-        // Rectángulo superior (NO MODIFICADO)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,19 +51,20 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.School, contentDescription = "Sigo Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Menu, contentDescription = "Menu Icon", modifier = Modifier.size(30.dp))
+                Icon(Icons.Filled.School, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Icon(Icons.Filled.Menu, contentDescription = null)
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil Icon", modifier = Modifier.size(30.dp))
+                Text(username ?: "Cargando...", style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.MoreVert, contentDescription = "More Options", modifier = Modifier.size(30.dp))
+                Icon(Icons.Filled.AccountCircle, contentDescription = null)
             }
         }
 
         Spacer(modifier = Modifier.height(20.dp))
+
 
         // ⭐ Mostrar nombre del usuario debajo del rectángulo
         Text(

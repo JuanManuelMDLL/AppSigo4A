@@ -31,8 +31,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
     // ViewModel
     val viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(AuthRepository())
+        factory = LoginViewModelFactory(AuthRepository(tokenManager))
     )
+
 
     val loginState by viewModel.loginState.collectAsState()
 

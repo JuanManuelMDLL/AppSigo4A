@@ -1,8 +1,6 @@
 package com.example.appsigo4a.data.local
 
 import android.content.Context
-import androidx.datastore.preferences.core.edit
-
 import android.content.SharedPreferences
 
 class TokenManager(context: Context) {
@@ -14,18 +12,23 @@ class TokenManager(context: Context) {
         prefs.edit().putString("token", token).apply()
     }
 
-    fun getToken(): String? {
-        return prefs.getString("token", null)
-    }
+    fun getToken(): String? = prefs.getString("token", null)
 
     fun clearToken() {
-        prefs.edit().remove("token").apply()
-    }
-    fun getFullName(): String? {
-        return prefs.getString("full_name", "")
+        prefs.edit().clear().apply()
     }
 
-    fun getUsername(): String? {
-        return prefs.getString("username", "")
+    fun saveUserData(fullName: String, username: String, email: String, profile: String) {
+        prefs.edit()
+            .putString("full_name", fullName)
+            .putString("username", username)
+            .putString("email", email)
+            .putString("profile", profile)
+            .apply()
     }
+
+    fun getFullName(): String? = prefs.getString("full_name", "")
+    fun getUsername(): String? = prefs.getString("username", "")
+    fun getEmail(): String? = prefs.getString("email", "")
+    fun getProfile(): String? = prefs.getString("profile", "")
 }
