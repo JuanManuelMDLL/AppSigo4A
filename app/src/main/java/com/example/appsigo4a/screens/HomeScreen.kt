@@ -31,7 +31,6 @@ fun HomeScreen(
             .padding(16.dp)
     ) {
 
-        // Rectángulo superior con íconos a la izquierda y foto de perfil a la derecha
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,9 +55,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Título de bienvenida
         Text(
             text = "Bienvenido",
             style = MaterialTheme.typography.headlineSmall
@@ -66,16 +62,13 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // ----------- TARJETA MI PERFIL ----------- 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onPerfilClick()
-                },
+                ) { onPerfilClick() },
             elevation = CardDefaults.cardElevation(4.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
@@ -86,10 +79,7 @@ fun HomeScreen(
                 Icon(Icons.Filled.Person, contentDescription = "Perfil")
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(
-                        text = "Mi perfil",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Text("Mi perfil", style = MaterialTheme.typography.titleMedium)
                     Text(
                         text = "Valida tu información personal y mantenla actualizada.",
                         style = MaterialTheme.typography.bodySmall
@@ -100,16 +90,13 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ----------- TARJETA HISTORIAL ----------- 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onHistorialClick()
-                },
+                ) { onHistorialClick() },
             elevation = CardDefaults.cardElevation(4.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
@@ -120,10 +107,7 @@ fun HomeScreen(
                 Icon(Icons.Filled.Folder, contentDescription = "Historial")
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(
-                        text = "Mi historial académico",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Text("Mi historial académico", style = MaterialTheme.typography.titleMedium)
                     Text(
                         text = "Consulta tu historial y estate al pendiente de tu estatus académico.",
                         style = MaterialTheme.typography.bodySmall

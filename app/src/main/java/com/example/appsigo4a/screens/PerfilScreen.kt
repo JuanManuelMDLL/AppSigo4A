@@ -14,7 +14,8 @@ import androidx.compose.foundation.border
 import androidx.compose.ui.Alignment
 
 @Composable
-fun PerfilScreen() {
+fun PerfilScreen(onLogout: () -> Unit) {
+
     val user = UserProfile(
         username = "UTM201020TI",
         email = "utm151015TI@utm-morelia.edu.mx",
@@ -26,7 +27,7 @@ fun PerfilScreen() {
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        // Rectángulo superior con íconos a la izquierda y foto de perfil a la derecha
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,7 +52,6 @@ fun PerfilScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Foto de perfil y usuario
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
@@ -61,29 +61,25 @@ fun PerfilScreen() {
             Text(text = "Usuario de prueba", style = MaterialTheme.typography.bodyLarge)
         }
 
-        // Línea delgada
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth(0.9f))
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Sección de perfil activo con icono de check
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start // Alineamos a la izquierda
+            horizontalArrangement = Arrangement.Start
         ) {
             Icon(Icons.Filled.CheckCircle, contentDescription = "Perfil activo", modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(8.dp)) // Aumentamos el espacio entre el ícono y el texto
+            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Perfil activo", style = MaterialTheme.typography.bodyMedium)
         }
 
-        // Otra línea delgada
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth(0.9f))
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Datos de perfil
         UserProfileCard(title = "Perfil", content = "Alumno")
         Spacer(modifier = Modifier.height(10.dp))
         UserProfileCard(title = "Usuario", content = user.username)
@@ -91,26 +87,21 @@ fun PerfilScreen() {
         UserProfileCard(title = "Contraseña", content = "CAMBIAR")
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        // Otra línea delgada
         Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Información Institucional
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.Bookmark, contentDescription = "Bookmark Icon", modifier = Modifier.size(24.dp))
             Spacer(modifier = Modifier.width(10.dp))
             Text(text = "Información Institucional", style = MaterialTheme.typography.bodyLarge)
         }
 
-        // Línea delgada
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth(0.9f))
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // Texto explicativo
         Text(
             text = "Este es tu correo electronico institucional, entra a Gmail de Google, agrega esta cuenta y personaliza tu contraseña.",
             style = MaterialTheme.typography.bodyMedium
@@ -118,24 +109,20 @@ fun PerfilScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Datos de correo e información adicional
         UserProfileCard(title = "Correo", content = user.email)
         Spacer(modifier = Modifier.height(10.dp))
-
-        // Se agregó más espacio entre las contraseñas
         UserProfileCardWithSpacing(title = "Contraseña", content = "2006817 - Si aún no la has personalizado", spacing = 24)
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Rectángulo importante
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             elevation = CardDefaults.cardElevation(6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.LightGray) // Se corrigió 'backgroundColor' a 'containerColor'
+            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "Importante", style = MaterialTheme.typography.bodyLarge) // Se corrigió 'h6' a 'bodyLarge'
+                Text(text = "Importante", style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "El correo electrónico estará activo una semana después del inicio del cuatrimestre.",
@@ -146,14 +133,32 @@ fun PerfilScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Usuario y contraseña para e-libro
         Text(text = "Este es tu usuario y contraseña, para entrar a e-libro", style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(10.dp))
         UserProfileCard(title = "Usuario", content = user.email)
         Spacer(modifier = Modifier.height(10.dp))
+        UserProfileCardWithSpacing(
+            title = "Contraseña",
+            content = "pass.2024 - Si aún no la has personalizado",
+            spacing = 24
+        )
 
-        // Contraseña para e-libro con mayor separación
-        UserProfileCardWithSpacing(title = "Contraseña", content = "pass.2024 - Si aún no la has personalizado", spacing = 24)
+        // ------------------ BOTÓN DE CERRAR SESIÓN ------------------
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Button(
+            onClick = { onLogout() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFD32F2F),
+                contentColor = Color.White
+            )
+        ) {
+            Text("Cerrar sesión")
+        }
+        // -------------------------------------------------------------
     }
 }
 
@@ -178,7 +183,7 @@ fun UserProfileCardWithSpacing(title: String, content: String, spacing: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = title, style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.width(spacing.dp)) // Ajustamos el espaciado entre título y contenido
+            Spacer(modifier = Modifier.width(spacing.dp))
             Text(text = content, style = MaterialTheme.typography.bodyMedium)
         }
     }

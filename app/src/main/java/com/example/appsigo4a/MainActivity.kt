@@ -55,7 +55,13 @@ fun AppNavigation() {
 
         // Pantalla Perfil
         composable("perfil") {
-            PerfilScreen()
+            PerfilScreen(
+                onLogout = {
+                    navController.navigate("login") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
+            )
         }
 
         // Pantalla Historial

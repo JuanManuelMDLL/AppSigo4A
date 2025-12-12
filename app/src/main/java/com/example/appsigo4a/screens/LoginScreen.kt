@@ -36,7 +36,6 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Logos SIGO + UTM
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(24.dp)
@@ -79,10 +78,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         if (error.isNotEmpty()) {
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error
-            )
+            Text(text = error, color = MaterialTheme.colorScheme.error)
             Spacer(modifier = Modifier.height(12.dp))
         }
 
