@@ -13,6 +13,7 @@ import com.example.appsigo4a.screens.HomeScreen
 import com.example.appsigo4a.screens.LoginScreen
 import com.example.appsigo4a.screens.PerfilScreen
 import com.example.appsigo4a.screens.HistorialScreen
+import com.example.appsigo4a.screens.CalificacionesScreen
 import com.example.appsigo4a.ui.theme.AppSigo4ATheme
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +35,7 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "login") {
 
-        // Pantalla Login
+
         composable("login") {
             LoginScreen(
                 onLoginSuccess = {
@@ -45,13 +46,12 @@ fun AppNavigation() {
             )
         }
 
-        // Pantalla Home
+
         composable("home") {
             HomeScreen(
                 onPerfilClick = { navController.navigate("perfil") },
                 onHistorialClick = { navController.navigate("historial") },
                 onLogoutClick = {
-                    // Redirige a la pantalla de login al cerrar sesión
                     navController.navigate("login") {
                         popUpTo("home") { inclusive = true }
                     }
@@ -59,25 +59,36 @@ fun AppNavigation() {
             )
         }
 
-        // Pantalla Perfil
+
         composable("perfil") {
-            PerfilScreen(onLogoutClick = {
-                // Redirige a la pantalla de login al cerrar sesión
-                navController.navigate("login") {
-                    popUpTo("perfil") { inclusive = true }
+            PerfilScreen(
+                onLogoutClick = {
+                    navController.navigate("login") {
+                        popUpTo("perfil") { inclusive = true }
+                    }
                 }
-            })
+            )
         }
 
-        // Pantalla Historial
+
         composable("historial") {
-            HistorialScreen(onLogoutClick = {
-                // Redirige a la pantalla de login al cerrar sesión
-                navController.navigate("login") {
-                    popUpTo("historial") { inclusive = true }
+            HistorialScreen(
+                onLogoutClick = {
+                    navController.navigate("login") {
+                        popUpTo("historial") { inclusive = true }
+                    }
+                },
+                onVerCalificacionesClick = {
+                    navController.navigate("calificaciones")
                 }
-            })
+            )
+        }
+
+
+        composable("calificaciones") {
+            CalificacionesScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }
-

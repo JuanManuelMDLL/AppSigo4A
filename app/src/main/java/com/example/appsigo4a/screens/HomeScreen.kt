@@ -1,25 +1,21 @@
 package com.example.appsigo4a.screens
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.border
+import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.foundation.border
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.School
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Logout
 import com.example.appsigo4a.data.local.TokenManager
 
 @Composable
@@ -28,10 +24,11 @@ fun HomeScreen(
     onHistorialClick: () -> Unit,
     onLogoutClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val tokenManager = remember { TokenManager(context) }
 
-    // ⭐ CARGAR DATOS REALES DEL USUARIO
-    val tokenManager = TokenManager(LocalContext.current)
-    val fullName = tokenManager.getFullName() ?: "Usuario"
+    // ✅ Usamos el nuevo getter
+    val fullName = tokenManager.getPersonFullName() ?: "Usuario"
     val username = tokenManager.getUsername() ?: ""
 
     Column(
@@ -40,7 +37,7 @@ fun HomeScreen(
             .padding(16.dp)
     ) {
 
-        // Rectángulo superior (NO MODIFICADO)
+        // Barra superior
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,96 +45,94 @@ fun HomeScreen(
                 .padding(horizontal = 16.dp)
                 .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
                 .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.School, contentDescription = "Sigo Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Menu, contentDescription = "Menu Icon", modifier = Modifier.size(30.dp))
+            Column {
+                Text(
+                    text = "Bienvenido",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = fullName,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                if (username.isNotEmpty()) {
+                    Text(
+                        text = "@$username",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Gray
+                    )
+                }
             }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.MoreVert, contentDescription = "More Options", modifier = Modifier.size(30.dp))
-            }
+            Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = null,
+                modifier = Modifier.size(40.dp)
+            )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // ⭐ Mostrar nombre del usuario debajo del rectángulo
-        Text(
-            text = "Bienvenido, $fullName",
-            style = MaterialTheme.typography.titleMedium
+        // Opción: Perfil
+        HomeOptionItem(
+            title = "Mi perfil",
+            icon = Icons.Filled.AccountCircle,
+            onClick = onPerfilClick
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Botón cerrar sesión (NO MODIFICADO)
+        // Opción: Historial
+        HomeOptionItem(
+            title = "Historial",
+            icon = Icons.Filled.History,
+            onClick = onHistorialClick
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Botón cerrar sesión
         OutlinedButton(
-            onClick = { onLogoutClick() },
+            onClick = onLogoutClick,
             modifier = Modifier.align(Alignment.End)
         ) {
+            Icon(
+                imageVector = Icons.Filled.Logout,
+                contentDescription = null
+            )
+            Spacer(Modifier.width(8.dp))
             Text("Cerrar sesión")
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // TARJETA MI PERFIL (NO CAMBIADA)
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onPerfilClick()
-                },
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.Person, contentDescription = "Perfil")
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text("Mi perfil", style = MaterialTheme.typography.titleMedium)
-                    Text("Valida tu información personal y mantenla actualizada.",
-                        style = MaterialTheme.typography.bodySmall)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // TARJETA HISTORIAL (NO CAMBIADA)
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    onHistorialClick()
-                },
-            elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Filled.Folder, contentDescription = "Historial")
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text("Mi historial académico", style = MaterialTheme.typography.titleMedium)
-                    Text("Consulta tu historial y estate al pendiente de tu estatus académico.",
-                        style = MaterialTheme.typography.bodySmall)
-                }
-            }
         }
     }
 }
 
+@Composable
+fun HomeOptionItem(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text(title, style = MaterialTheme.typography.bodyLarge)
+            }
+            Icon(Icons.Filled.ArrowForward, contentDescription = null)
+        }
+    }
+}
