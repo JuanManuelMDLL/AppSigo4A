@@ -10,22 +10,56 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.appsigo4a.R
+import com.example.appsigo4a.data.local.TokenManager
+import com.example.appsigo4a.data.remote.AuthRepository
+import com.example.appsigo4a.di.LoginViewModelFactory
+import com.example.appsigo4a.ui.login.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
 
+    val context = LocalContext.current
+    val tokenManager = remember { TokenManager(context) }
+
+    // ViewModel
+    val viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(AuthRepository())
+    )
+
+    val loginState by viewModel.loginState.collectAsState()
+
     var usuario by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
+    var loading by remember { mutableStateOf(false) }
 
-    val usuarioCorrecto = "UTM2025"
-    val passwordCorrecto = "12345"
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(loginState) {
+        loginState?.let { result ->
+            loading = false
+
+            result.onSuccess { user ->
+                // Guardar token
+                tokenManager.saveToken(user.bearer)
+
+                // Redirigir
+                onLoginSuccess()
+            }
+
+            result.onFailure {
+                error = "Credenciales incorrectas o servidor no disponible"
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -36,20 +70,19 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Logos SIGO + UTM
+        // Logos
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_sigo),
-                contentDescription = "Logo SIGO",
+                painter = painterResource(id = R.drawable.logosigo),
+                contentDescription = "LogoSIGO",
                 modifier = Modifier.size(90.dp)
             )
-
             Image(
-                painter = painterResource(id = R.drawable.logo_utm),
-                contentDescription = "Logo UTM",
+                painter = painterResource(id = R.drawable.logoutm),
+                contentDescription = "LogoUTM",
                 modifier = Modifier.size(90.dp)
             )
         }
@@ -79,29 +112,30 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         if (error.isNotEmpty()) {
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error
-            )
+            Text(text = error, color = MaterialTheme.colorScheme.error)
             Spacer(modifier = Modifier.height(12.dp))
         }
 
         Button(
             onClick = {
-                when {
-                    usuario.isBlank() || password.isBlank() -> error = "Todos los campos son obligatorios"
-                    usuario == usuarioCorrecto && password == passwordCorrecto -> {
-                        error = ""
-                        onLoginSuccess()
-                    }
-                    else -> error = "Usuario o contraseña incorrectos"
-                }
+                loading = true
+                error = ""
+                viewModel.login(usuario, password)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text("INICIAR SESIÓN")
+
+            if (loading) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(22.dp)
+                )
+            } else {
+                Text("INICIAR SESIÓN")
+            }
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))

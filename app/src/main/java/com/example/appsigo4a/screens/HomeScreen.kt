@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -16,14 +17,15 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.foundation.border
-import androidx.compose.ui.graphics.Color
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.School
 
 @Composable
 fun HomeScreen(
     onPerfilClick: () -> Unit,
-    onHistorialClick: () -> Unit
+    onHistorialClick: () -> Unit,
+    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
 ) {
     Column(
         modifier = Modifier
@@ -56,17 +58,19 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Botón para cerrar sesión
+        OutlinedButton(
+            onClick = { onLogoutClick() },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Cerrar sesión")
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Título de bienvenida
-        Text(
-            text = "Bienvenido",
-            style = MaterialTheme.typography.headlineSmall
-        )
+        // Resto de la pantalla (contenido actual)
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // ----------- TARJETA MI PERFIL ----------- 
+        // TARJETA MI PERFIL
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,7 +104,7 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ----------- TARJETA HISTORIAL ----------- 
+        // TARJETA HISTORIAL
         Card(
             modifier = Modifier
                 .fillMaxWidth()

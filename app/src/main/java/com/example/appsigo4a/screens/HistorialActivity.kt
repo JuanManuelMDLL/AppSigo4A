@@ -10,7 +10,8 @@ class HistorialActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppSigo4ATheme {
-                HistorialScreen()
+                // Pasamos un onLogoutClick en blanco ya que no necesitamos hacer nada en esta actividad por ahora
+                HistorialScreen(onLogoutClick = { /* Acción de cerrar sesión */ })
             }
         }
     }

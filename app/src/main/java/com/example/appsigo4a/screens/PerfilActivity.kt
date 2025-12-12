@@ -10,8 +10,10 @@ class PerfilActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppSigo4ATheme {
-                PerfilScreen()
+                // Pasamos el onLogoutClick al PerfilScreen
+                PerfilScreen(onLogoutClick = { /* Acción de cerrar sesión */ })
             }
         }
     }
 }
+

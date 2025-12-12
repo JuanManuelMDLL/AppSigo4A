@@ -1,8 +1,8 @@
 package com.example.appsigo4a.screens
 
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,8 +12,18 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.border
 
+data class AcademicHistory(
+    val cuatrimestre: String,
+    val carrera: String,
+    val grupo: String,
+    val tutor: String,
+    val progreso: Int
+)
+
 @Composable
-fun HistorialScreen() {
+fun HistorialScreen(
+    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
+) {
     val historial = AcademicHistory(
         cuatrimestre = "1er Cuatrimestre",
         carrera = "Tecnologías de la Información",
@@ -67,12 +77,12 @@ fun HistorialScreen() {
             horizontalArrangement = Arrangement.Start
         ) {
             Column(horizontalAlignment = Alignment.Start) {
-                Text("1er Cuatrimestre", style = MaterialTheme.typography.bodyLarge)
+                Text(historial.cuatrimestre, style = MaterialTheme.typography.bodyLarge)
                 Text("Sep - Dic 2024", style = MaterialTheme.typography.bodyMedium)
             }
         }
 
-        // Línea delgada (y eliminación del icono "+")
+        // Línea delgada
         Spacer(modifier = Modifier.height(10.dp))
         Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
 
@@ -137,13 +147,15 @@ fun HistorialScreen() {
             Text(text = "Desempeño", style = MaterialTheme.typography.bodyLarge)
             Text(text = "Por capturar", style = MaterialTheme.typography.bodyMedium)
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botón para cerrar sesión
+        OutlinedButton(
+            onClick = { onLogoutClick() },
+            modifier = Modifier.align(Alignment.End).padding(top = 20.dp)
+        ) {
+            Text("Cerrar sesión")
+        }
     }
 }
-
-data class AcademicHistory(
-    val cuatrimestre: String,
-    val carrera: String,
-    val grupo: String,
-    val tutor: String,
-    val progreso: Int
-)

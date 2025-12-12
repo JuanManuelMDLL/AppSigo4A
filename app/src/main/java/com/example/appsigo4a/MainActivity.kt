@@ -49,18 +49,35 @@ fun AppNavigation() {
         composable("home") {
             HomeScreen(
                 onPerfilClick = { navController.navigate("perfil") },
-                onHistorialClick = { navController.navigate("historial") }
+                onHistorialClick = { navController.navigate("historial") },
+                onLogoutClick = {
+                    // Redirige a la pantalla de login al cerrar sesión
+                    navController.navigate("login") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
             )
         }
 
         // Pantalla Perfil
         composable("perfil") {
-            PerfilScreen()
+            PerfilScreen(onLogoutClick = {
+                // Redirige a la pantalla de login al cerrar sesión
+                navController.navigate("login") {
+                    popUpTo("perfil") { inclusive = true }
+                }
+            })
         }
 
         // Pantalla Historial
         composable("historial") {
-            HistorialScreen()
+            HistorialScreen(onLogoutClick = {
+                // Redirige a la pantalla de login al cerrar sesión
+                navController.navigate("login") {
+                    popUpTo("historial") { inclusive = true }
+                }
+            })
         }
     }
 }
+

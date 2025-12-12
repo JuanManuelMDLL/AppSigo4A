@@ -13,8 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.border
 import androidx.compose.ui.Alignment
 
+data class UserProfile(val username: String, val email: String, val password: String)
+
 @Composable
-fun PerfilScreen() {
+fun PerfilScreen(
+    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
+) {
     val user = UserProfile(
         username = "UTM201020TI",
         email = "utm151015TI@utm-morelia.edu.mx",
@@ -154,6 +158,16 @@ fun PerfilScreen() {
 
         // Contraseña para e-libro con mayor separación
         UserProfileCardWithSpacing(title = "Contraseña", content = "pass.2024 - Si aún no la has personalizado", spacing = 24)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botón para cerrar sesión
+        OutlinedButton(
+            onClick = { onLogoutClick() },
+            modifier = Modifier.align(Alignment.End).padding(top = 20.dp)
+        ) {
+            Text("Cerrar sesión")
+        }
     }
 }
 
@@ -183,5 +197,3 @@ fun UserProfileCardWithSpacing(title: String, content: String, spacing: Int) {
         }
     }
 }
-
-data class UserProfile(val username: String, val email: String, val password: String)
