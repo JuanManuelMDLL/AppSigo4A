@@ -2,6 +2,7 @@ package com.example.appsigo4a.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.appsigo4a.data.model.UserResponse
 
 class TokenManager(context: Context) {
 
@@ -18,17 +19,25 @@ class TokenManager(context: Context) {
         prefs.edit().clear().apply()
     }
 
-    fun saveUserData(fullName: String, username: String, email: String, profile: String) {
+    // GUARDAR TODO EL JSON DEL USUARIO
+    fun saveUser(user: UserResponse) {
         prefs.edit()
-            .putString("full_name", fullName)
-            .putString("username", username)
-            .putString("email", email)
-            .putString("profile", profile)
+            .putString("full_name", user.personFullName)
+            .putString("username", user.username)
+            .putString("email", user.email)
+            .putString("profile_name", user.profileName)
+            .putString("access_module", user.accessModule)
+            .putBoolean("active", user.active)
+            .putString("register", user.register)
             .apply()
     }
 
     fun getFullName(): String? = prefs.getString("full_name", "")
     fun getUsername(): String? = prefs.getString("username", "")
     fun getEmail(): String? = prefs.getString("email", "")
-    fun getProfile(): String? = prefs.getString("profile", "")
+    fun getProfileName(): String? = prefs.getString("profile_name", "")
+    fun getAccessModule(): String? = prefs.getString("access_module", "")
+    fun isActive(): Boolean = prefs.getBoolean("active", false)
+    fun getRegisterDate(): String? = prefs.getString("register", "")
 }
+

@@ -24,6 +24,10 @@ fun PerfilScreen(
     val fullName = tokenManager.getFullName() ?: "Usuario"
     val username = tokenManager.getUsername() ?: ""
     val email = tokenManager.getEmail() ?: ""
+    val profile = tokenManager.getProfileName() ?: "Alumno"
+    val module = tokenManager.getAccessModule() ?: ""
+    val active = tokenManager.isActive()
+    val registerDate = tokenManager.getRegisterDate() ?: ""
 
     Column(
         modifier = Modifier
@@ -31,55 +35,57 @@ fun PerfilScreen(
             .padding(20.dp)
     ) {
 
-        // Rectángulo superior
+        // 🔹 Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
-                .padding(horizontal = 16.dp)
                 .border(1.dp, Color.Black, RoundedCornerShape(10.dp))
                 .padding(12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.School, null, Modifier.size(30.dp))
+            Row {
+                Icon(Icons.Filled.School, null)
                 Spacer(Modifier.width(8.dp))
-                Icon(Icons.Filled.Menu, null, Modifier.size(30.dp))
+                Icon(Icons.Filled.Menu, null)
             }
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.AccountCircle, null, Modifier.size(30.dp))
+            Row {
+                Icon(Icons.Filled.AccountCircle, null)
                 Spacer(Modifier.width(8.dp))
-                Icon(Icons.Filled.MoreVert, null, Modifier.size(30.dp))
+                Icon(Icons.Filled.MoreVert, null)
             }
         }
 
         Spacer(Modifier.height(20.dp))
 
-        // Foto + nombre
-        Row {
+        // 🔹 Foto + Nombre
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.AccountCircle, null, Modifier.size(40.dp))
             Spacer(Modifier.width(10.dp))
             Text(fullName, style = MaterialTheme.typography.bodyLarge)
         }
 
         Spacer(Modifier.height(10.dp))
-        Divider(color = Color.Black)
+        Divider()
 
-        Spacer(Modifier.height(10.dp))
-        Row {
-            Icon(Icons.Filled.CheckCircle, null)
+        // 🔹 Estado
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                if (active) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
+                null
+            )
             Spacer(Modifier.width(8.dp))
-            Text("Perfil activo")
+            Text(if (active) "Perfil activo" else "Perfil inactivo")
         }
 
         Spacer(Modifier.height(20.dp))
 
-        UserProfileCard("Perfil", "Alumno")
-        Spacer(Modifier.height(10.dp))
+        // 🔹 Datos del perfil (formato bonito)
+        UserProfileCard("Perfil", profile)
         UserProfileCard("Usuario", username)
-        Spacer(Modifier.height(10.dp))
         UserProfileCard("Correo", email)
+        UserProfileCard("Módulo", module)
+        UserProfileCard("Fecha de registro", registerDate)
 
         Spacer(Modifier.height(30.dp))
 
@@ -91,6 +97,7 @@ fun PerfilScreen(
         }
     }
 }
+
 
 @Composable
 fun UserProfileCard(title: String, content: String) {

@@ -49,12 +49,11 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             loading = false
 
             result.onSuccess { user ->
-                // Guardar token
                 tokenManager.saveToken(user.bearer)
-
-                // Redirigir
+                tokenManager.saveUser(user)
                 onLoginSuccess()
             }
+
 
             result.onFailure {
                 error = "Credenciales incorrectas o servidor no disponible"

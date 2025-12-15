@@ -1,161 +1,205 @@
 package com.example.appsigo4a.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.border
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
-data class AcademicHistory(
-    val cuatrimestre: String,
+// -------------------- MODELOS --------------------
+
+data class Materia(
+    val nombre: String,
+    val parcial1: Int,
+    val parcial2: Int,
+    val parcial3: Int,
+    val maestro: String
+) {
+    val final: Int
+        get() = (parcial1 + parcial2 + parcial3) / 3
+}
+
+data class Cuatrimestre(
+    val nombre: String,
+    val estado: String,
     val carrera: String,
     val grupo: String,
     val tutor: String,
-    val progreso: Int
+    val progreso: Int,
+    val materias: List<Materia>
 )
+
+// -------------------- HELPERS --------------------
+
+fun calificacionAprobatoria(): Int = Random.nextInt(7, 11)
+
+fun letra(calificacion: Int): String =
+    when (calificacion) {
+        10 -> "E"
+        9 -> "A"
+        8 -> "B"
+        else -> "R"
+    }
+
+// -------------------- SCREEN --------------------
 
 @Composable
 fun HistorialScreen(
-    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
+    onLogoutClick: () -> Unit
 ) {
-    val historial = AcademicHistory(
-        cuatrimestre = "1er Cuatrimestre",
-        carrera = "Tecnologías de la Información",
-        grupo = "1A Matutino",
-        tutor = "Dra. Gricelda Rodríguez Robledo",
-        progreso = 49
+
+    val cuatrimestres = listOf(
+
+        Cuatrimestre(
+            "1er Cuatrimestre",
+            "Finalizado",
+            "Tecnologías de la Información",
+            "1B Matutino",
+            "Dra. Gricelda Rodríguez Robledo",
+            100,
+            listOf(
+                Materia("Inglés I", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. María Verónica"),
+                Materia("Desarrollo Humano y Valores", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. Laura Pérez Pazos"),
+                Materia("Fundamentos Matemáticos", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. Rosa Isela González Raya"),
+                Materia("Fundamentos de Redes", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "M.T.I Rosario Hernández Calderón"),
+                Materia("Física", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "I.S.C Juan José Bermúdez Camille"),
+                Materia("Fundamentos de Programación", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "I.T.I Julio César Correa Torres"),
+                Materia("Comunicación y Habilidades Digitales", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Olga Leticia Robles García")
+            )
+        ),
+
+        Cuatrimestre(
+            "2do Cuatrimestre",
+            "Finalizado",
+            "Tecnologías de la Información",
+            "2A Matutino",
+            "Dra. Gricelda Rodríguez Robledo",
+            100,
+            listOf(
+                Materia("Inglés II", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. María Verónica Álvarez Ríos"),
+                Materia("Habilidades Socioemocionales", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. José Luis Calvillo Banda"),
+                Materia("Cálculo Diferencial", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Ing. José Israel Rodríguez Flores"),
+                Materia("Conmutación y Enrutamiento de Redes", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "M.T.I Rosario Hernández Calderón"),
+                Materia("Probabilidad y Estadística", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "I.S.C Juan José Bermúdez Camille"),
+                Materia("Programación Estructurada", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Gricelda Rodríguez Robledo"),
+                Materia("Sistemas Operativos", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Olga Leticia Robles García")
+            )
+        ),
+
+        Cuatrimestre(
+            "3er Cuatrimestre",
+            "Finalizado",
+            "Tecnologías de la Información",
+            "3A Matutino",
+            "Dra. Gricelda Rodríguez Robledo",
+            100,
+            listOf(
+                Materia("Inglés III", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Leticia Rubicela Rodríguez Ruiz"),
+                Materia("Desarrollo del Pensamiento y Toma de Decisiones", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Olga Leticia Robles García"),
+                Materia("Cálculo Integral", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Ing. Dante García García"),
+                Materia("Tópicos de Calidad para el Diseño", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "D.G María del Carmen Solorio Raya"),
+                Materia("Bases de Datos", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "M.G.T.I Gustavo Abraham Vanegas Contreras"),
+                Materia("Programación Orientada a Objetos", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Gricelda Rodríguez Robledo"),
+                Materia("Proyecto Integrador I", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "I.S.C Alma Lilia González Áspera")
+            )
+        ),
+
+        Cuatrimestre(
+            "4to Cuatrimestre",
+            "En curso",
+            "Tecnologías de la Información",
+            "4A Matutino",
+            "Dra. Gricelda Rodríguez Robledo",
+            49,
+            listOf(
+                Materia("Inglés IV", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Lic. Marco Antonio Suárez Villanueva"),
+                Materia("Ética Profesional", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Juan Ghaleb Sánchez López"),
+                Materia("Cálculo de Varias Variables", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Ing. José Israel Rodríguez Flores"),
+                Materia("Aplicaciones Web", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "Dra. Gricelda Rodríguez Robledo"),
+                Materia("Estructura de Datos", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "M.G.T.I Gustavo Abraham Vanegas Contreras"),
+                Materia("Desarrollo de Aplicaciones Móviles", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "I.S.C Nelson Grozby Padilla Álvarez"),
+                Materia("Análisis y Diseño de Software", calificacionAprobatoria(), calificacionAprobatoria(), calificacionAprobatoria(), "M.T.I Marcela Álvarez Vivanco")
+            )
+        )
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
-        // Rectángulo superior con iconos
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .padding(horizontal = 16.dp)
-                .border(1.dp, Color.Black, RoundedCornerShape(10.dp)) // Borde del rectángulo
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.School, contentDescription = "Sigo Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Menu, contentDescription = "Menu Icon", modifier = Modifier.size(30.dp))
-            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.MoreVert, contentDescription = "More Options", modifier = Modifier.size(30.dp))
+        item {
+            Text("Historial Académico", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+        }
+
+        items(cuatrimestres) { cuatri ->
+            CuatrimestreItem(cuatri)
+            Spacer(Modifier.height(12.dp))
+        }
+
+        item {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                OutlinedButton(onClick = onLogoutClick) {
+                    Text("Cerrar sesión")
+                }
             }
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(20.dp))
+// -------------------- COMPONENTES --------------------
 
-        // Título centrado
-        Text("Historial Académico", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+@Composable
+fun CuatrimestreItem(cuatrimestre: Cuatrimestre) {
+    var expanded by remember { mutableStateOf(false) }
 
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = { expanded = !expanded }
+    ) {
+        Column(Modifier.padding(16.dp)) {
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(cuatrimestre.nombre, style = MaterialTheme.typography.titleMedium)
+                Icon(if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore, null)
+            }
 
-        // Cuatrimestre y fecha (alineados a la izquierda)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Column(horizontalAlignment = Alignment.Start) {
-                Text(historial.cuatrimestre, style = MaterialTheme.typography.bodyLarge)
-                Text("Sep - Dic 2024", style = MaterialTheme.typography.bodyMedium)
+            Spacer(Modifier.height(8.dp))
+            Text("Estado: ${cuatrimestre.estado}")
+            Text("Carrera: ${cuatrimestre.carrera}")
+            Text("Grupo: ${cuatrimestre.grupo}")
+            Text("Tutor: ${cuatrimestre.tutor}")
+            Text("Progreso: ${cuatrimestre.progreso}%")
+
+            if (expanded) {
+                Spacer(Modifier.height(12.dp))
+                cuatrimestre.materias.forEach { MateriaItem(it) }
             }
         }
+    }
+}
 
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
-
-        // Palomita y texto "Actividad"
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Icon(Icons.Filled.CheckCircle, contentDescription = "Actividad", modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Activo", style = MaterialTheme.typography.bodyMedium)
-        }
-
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth(0.9f))
-
-        // Información académica (en una sola línea: título a la izquierda, contenido a la derecha)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Carrera", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.carrera, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Grupo", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.grupo, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Tutor", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.tutor, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Progreso", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${historial.progreso}%", style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Desempeño sin línea delgada
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Desempeño", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Por capturar", style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Botón para cerrar sesión
-        OutlinedButton(
-            onClick = { onLogoutClick() },
-            modifier = Modifier.align(Alignment.End).padding(top = 20.dp)
-        ) {
-            Text("Cerrar sesión")
-        }
+@Composable
+fun MateriaItem(materia: Materia) {
+    Column(Modifier.padding(vertical = 6.dp)) {
+        Text(materia.nombre, style = MaterialTheme.typography.bodyLarge)
+        Text("Parcial 1: ${materia.parcial1}")
+        Text("Parcial 2: ${materia.parcial2}")
+        Text("Parcial 3: ${materia.parcial3}")
+        Text("Final: ${materia.final} (${letra(materia.final)})")
+        Text("Maestro: ${materia.maestro}")
+        Divider(Modifier.padding(top = 8.dp))
     }
 }
