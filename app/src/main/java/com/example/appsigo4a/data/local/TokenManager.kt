@@ -8,6 +8,9 @@ class TokenManager(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("sigo_prefs", Context.MODE_PRIVATE)
 
+    // ===============================
+    // Token
+    // ===============================
     fun saveToken(token: String) {
         prefs.edit().putString("token", token).apply()
     }
@@ -18,7 +21,15 @@ class TokenManager(context: Context) {
         prefs.edit().clear().apply()
     }
 
-    fun saveUserData(fullName: String, username: String, email: String, profile: String) {
+    // ===============================
+    // Datos básicos del usuario
+    // ===============================
+    fun saveUserData(
+        fullName: String,
+        username: String,
+        email: String,
+        profile: String
+    ) {
         prefs.edit()
             .putString("full_name", fullName)
             .putString("username", username)
@@ -31,4 +42,20 @@ class TokenManager(context: Context) {
     fun getUsername(): String? = prefs.getString("username", "")
     fun getEmail(): String? = prefs.getString("email", "")
     fun getProfile(): String? = prefs.getString("profile", "")
+
+    // ===============================
+    // Datos extra (lo que pidió el profe)
+    // ===============================
+    fun saveExtraUserData(
+        module: String,
+        registerDate: String
+    ) {
+        prefs.edit()
+            .putString("module", module)
+            .putString("register_date", registerDate)
+            .apply()
+    }
+
+    fun getModule(): String? = prefs.getString("module", "")
+    fun getRegisterDate(): String? = prefs.getString("register_date", "")
 }

@@ -30,6 +30,11 @@ class AuthRepository(
                     username = user.username,
                     email = user.email,
                     profile = user.profileName
+
+                )
+                tokenManager.saveExtraUserData(
+                    module = user.accessModule,
+                    registerDate = user.register
                 )
 
                 Result.success(user)

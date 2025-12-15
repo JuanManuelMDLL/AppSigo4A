@@ -24,6 +24,8 @@ fun PerfilScreen(
     val fullName = tokenManager.getFullName() ?: "Usuario"
     val username = tokenManager.getUsername() ?: ""
     val email = tokenManager.getEmail() ?: ""
+    val module = tokenManager.getModule() ?: ""
+    val registerDate = tokenManager.getRegisterDate() ?: ""
 
     Column(
         modifier = Modifier
@@ -75,11 +77,16 @@ fun PerfilScreen(
 
         Spacer(Modifier.height(20.dp))
 
+        // Datos del perfil
         UserProfileCard("Perfil", "Alumno")
         Spacer(Modifier.height(10.dp))
         UserProfileCard("Usuario", username)
         Spacer(Modifier.height(10.dp))
         UserProfileCard("Correo", email)
+        Spacer(Modifier.height(10.dp))
+        UserProfileCard("Módulo", module)
+        Spacer(Modifier.height(10.dp))
+        UserProfileCard("Fecha de creación", registerDate)
 
         Spacer(Modifier.height(30.dp))
 

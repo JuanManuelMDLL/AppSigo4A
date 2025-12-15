@@ -1,161 +1,182 @@
 package com.example.appsigo4a.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.foundation.border
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
-data class AcademicHistory(
-    val cuatrimestre: String,
+// -------------------- MODELOS --------------------
+
+data class Materia(
+    val nombre: String,
+    val parcial1: Int,
+    val parcial2: Int,
+    val parcial3: Int,
+    val maestro: String
+) {
+    val final: Int
+        get() = (parcial1 + parcial2 + parcial3) / 3
+}
+
+data class Cuatrimestre(
+    val nombre: String,
+    val estado: String,
     val carrera: String,
     val grupo: String,
     val tutor: String,
-    val progreso: Int
+    val progreso: Int,
+    val materias: List<Materia>
 )
+
+// -------------------- HELPERS --------------------
+
+private fun calificacion(): Int = Random.nextInt(7, 11)
+
+private fun letra(calificacion: Int): String =
+    when (calificacion) {
+        10 -> "E"
+        9 -> "A"
+        8 -> "B"
+        else -> "R"
+    }
+
+// -------------------- SCREEN --------------------
 
 @Composable
 fun HistorialScreen(
-    onLogoutClick: () -> Unit // Nueva función para manejar el cierre de sesión
+    onLogoutClick: () -> Unit
 ) {
-    val historial = AcademicHistory(
-        cuatrimestre = "1er Cuatrimestre",
-        carrera = "Tecnologías de la Información",
-        grupo = "1A Matutino",
-        tutor = "Dra. Gricelda Rodríguez Robledo",
-        progreso = 49
-    )
 
-    Column(
+    val cuatrimestres = remember {
+        listOf(
+            Cuatrimestre(
+                "1er Cuatrimestre",
+                "Finalizado",
+                "Tecnologías de la Información",
+                "1A Matutino",
+                "Dra. Gricelda Rodríguez Robledo",
+                100,
+                listOf(
+                    Materia("Inglés I", calificacion(), calificacion(), calificacion(), "Lic. María Verónica"),
+                    Materia("Fundamentos de Programación", calificacion(), calificacion(), calificacion(), "I.T.I Julio César Correa")
+                )
+            ),
+            Cuatrimestre(
+                "2do Cuatrimestre",
+                "Finalizado",
+                "Tecnologías de la Información",
+                "2A Matutino",
+                "Dra. Olga Leticia Robles García",
+                100,
+                listOf(
+                    Materia("Cálculo Diferencial", calificacion(), calificacion(), calificacion(), "Ing. José Israel Rodríguez"),
+                    Materia("Programación Estructurada", calificacion(), calificacion(), calificacion(), "Dra. Gricelda Rodríguez")
+                )
+            ),
+            Cuatrimestre(
+                "3er Cuatrimestre",
+                "En curso",
+                "Tecnologías de la Información",
+                "4A Matutino",
+                "Dra. Gricelda Rodríguez Robledo",
+                49,
+                listOf(
+                    Materia("Aplicaciones Web", calificacion(), calificacion(), calificacion(), "Dra. Gricelda Rodríguez"),
+                    Materia("Desarrollo de Apps Móviles", calificacion(), calificacion(), calificacion(), "Ing. Nelson Padilla")
+                )
+            )
+        )
+    }
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .padding(16.dp)
     ) {
-        // Rectángulo superior con iconos
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .padding(horizontal = 16.dp)
-                .border(1.dp, Color.Black, RoundedCornerShape(10.dp)) // Borde del rectángulo
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.School, contentDescription = "Sigo Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.Menu, contentDescription = "Menu Icon", modifier = Modifier.size(30.dp))
-            }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.AccountCircle, contentDescription = "Perfil Icon", modifier = Modifier.size(30.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Filled.MoreVert, contentDescription = "More Options", modifier = Modifier.size(30.dp))
-            }
+        item {
+            Text(
+                text = "Historial Académico",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(Modifier.height(16.dp))
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        items(cuatrimestres) { cuatri ->
+            CuatrimestreItem(cuatri)
+            Spacer(Modifier.height(12.dp))
+        }
 
-        // Título centrado
-        Text("Historial Académico", style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Cuatrimestre y fecha (alineados a la izquierda)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Column(horizontalAlignment = Alignment.Start) {
-                Text(historial.cuatrimestre, style = MaterialTheme.typography.bodyLarge)
-                Text("Sep - Dic 2024", style = MaterialTheme.typography.bodyMedium)
+        item {
+            Spacer(Modifier.height(20.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                OutlinedButton(onClick = onLogoutClick) {
+                    Text("Cerrar sesión")
+                }
             }
         }
+    }
+}
 
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth())
+// -------------------- COMPONENTES --------------------
 
-        // Palomita y texto "Actividad"
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Icon(Icons.Filled.CheckCircle, contentDescription = "Actividad", modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Activo", style = MaterialTheme.typography.bodyMedium)
+@Composable
+private fun CuatrimestreItem(cuatrimestre: Cuatrimestre) {
+
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = { expanded = !expanded }
+    ) {
+        Column(Modifier.padding(16.dp)) {
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(cuatrimestre.nombre, style = MaterialTheme.typography.titleMedium)
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                    contentDescription = null
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+            Text("Estado: ${cuatrimestre.estado}")
+            Text("Carrera: ${cuatrimestre.carrera}")
+            Text("Grupo: ${cuatrimestre.grupo}")
+            Text("Tutor: ${cuatrimestre.tutor}")
+            Text("Progreso: ${cuatrimestre.progreso}%")
+
+            if (expanded) {
+                Spacer(Modifier.height(12.dp))
+                cuatrimestre.materias.forEach { MateriaItem(it) }
+            }
         }
+    }
+}
 
-        // Línea delgada
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Black, thickness = 1.dp, modifier = Modifier.fillMaxWidth(0.9f))
-
-        // Información académica (en una sola línea: título a la izquierda, contenido a la derecha)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Carrera", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.carrera, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Grupo", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.grupo, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Tutor", style = MaterialTheme.typography.bodyLarge)
-            Text(text = historial.tutor, style = MaterialTheme.typography.bodyMedium)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Progreso", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${historial.progreso}%", style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Desempeño sin línea delgada
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Desempeño", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Por capturar", style = MaterialTheme.typography.bodyMedium)
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Botón para cerrar sesión
-        OutlinedButton(
-            onClick = { onLogoutClick() },
-            modifier = Modifier.align(Alignment.End).padding(top = 20.dp)
-        ) {
-            Text("Cerrar sesión")
-        }
+@Composable
+private fun MateriaItem(materia: Materia) {
+    Column(Modifier.padding(vertical = 6.dp)) {
+        Text(materia.nombre, style = MaterialTheme.typography.bodyLarge)
+        Text("P1: ${materia.parcial1}  |  P2: ${materia.parcial2}  |  P3: ${materia.parcial3}")
+        Text("Final: ${materia.final} (${letra(materia.final)})")
+        Text("Maestro: ${materia.maestro}")
+        Divider(Modifier.padding(top = 8.dp))
     }
 }
